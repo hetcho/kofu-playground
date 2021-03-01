@@ -4,7 +4,6 @@ val kotlinVersion: String by project
 val springBootVersion: String by project
 val springKoFuVersion: String by project
 val kotlinCoroutinesVersion: String by project
-val kotlinSerializationVersion: String by project
 
 plugins {
 	id("org.springframework.boot")
@@ -42,7 +41,6 @@ dependencies {
 
 	// Kotlinx
 	implementation(kotlinx("coroutines-reactor", kotlinCoroutinesVersion))
-	implementation(kotlinx("serialization-runtime", kotlinSerializationVersion))
 
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
