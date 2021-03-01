@@ -1,10 +1,16 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+val springBootVersion: String by project
+val kotlinCoroutinesVersion: String by project
+val kotlinSerializationVersion: String by project
+
 plugins {
-	id("org.springframework.boot") version "2.4.3"
-	id("io.spring.dependency-management") version "1.0.11.RELEASE"
-	kotlin("jvm") version "1.4.30"
-	kotlin("plugin.spring") version "1.4.30"
+	id("org.springframework.boot")
+	id("io.spring.dependency-management")
+
+	kotlin("jvm")
+	kotlin("plugin.spring")
+	kotlin("plugin.serialization")
 }
 
 group = "ru.hetcho"
@@ -16,16 +22,30 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
-	implementation("org.springframework.boot:spring-boot-starter-mustache")
-	implementation("org.springframework.boot:spring-boot-starter-webflux")
+	fun kotlinx(module: String, version: String) = "org.jetbrains.kotlin:kotlinx-$module:$version"
+	fun starter(module: String, version: String = springBootVersion) = "org.springframework.boot:spring-boot-starter-$module:$version"
+
+	// Spring Boot
+	implementation(starter("webflux"))
+	implementation(starter("mustache"))
+	implementation(starter("data-r2dbc"))
+
+	// Kotlin
+	implementation(kotlin("reflect"))
+	implementation(kotlin("stdlib-jdk8"))
+
+	// Kotlinx
+	implementation(kotlinx("coroutines-reactor", kotlinCoroutinesVersion))
+	implementation(kotlinx("serialization-runtime", kotlinSerializationVersion))
+
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
-	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+
+	// Database
 	runtimeOnly("com.h2database:h2")
 	runtimeOnly("io.r2dbc:r2dbc-h2")
+
+	// Test
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")
 }
